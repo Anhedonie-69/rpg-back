@@ -36,7 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
-
     // --- Lifecycle Callbacks ---
 
     #[ORM\PrePersist]
@@ -50,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->updatedAt = new \DateTimeImmutable();
     }
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserProfile $profile = null;
 
     // --- Getters / Setters ---
 
@@ -87,5 +89,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $data = (array) $this;
         $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
         return $data;
+    }
+
+    public function getProfile(): ?UserProfile { return $this->profile; }
+    public function setProfile(?UserProfile $profile): static
+    {
+        if ($profile === null && $this->profile !== null) {
+            $this->profile->setUser(null);
+        }
+        if ($profile !== null && $profile->getUser() !== $this) {
+            $profile->setUser($this);
+        }
+        $this->profile = $profile;
+        return $this;
     }
 }
