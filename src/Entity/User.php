@@ -5,6 +5,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -52,6 +54,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?UserProfile $profile = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserOptions $options = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: GameSave::class, cascade: ['persist', 'remove'])]
+    private Collection $gameSaves;
+
+    public function __construct()
+    {
+        $this->gameSaves = new ArrayCollection();
+    }
 
     // --- Getters / Setters ---
 
@@ -103,4 +116,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->profile = $profile;
         return $this;
     }
+
+    public function getOptions(): ?UserOptions { return $this->options; }
+    public function setOptions(?UserOptions $options): static
+    {
+        if ($options === null && $this->options !== null) {
+            $this->options->setUser(null);
+        }
+        if ($options !== null && $options->getUser() !== $this) {
+            $options->setUser($this);
+        }
+        $this->options = $options;
+        return $this;
+    }
+
+    public function getGameSaves(): Collection { return $this->gameSaves; }
 }

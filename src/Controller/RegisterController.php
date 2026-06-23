@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Entity\UserOptions;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,6 +57,10 @@ class RegisterController extends AbstractController
         $profile = new UserProfile();
         $profile->setUser($user);
         $em->persist($profile);
+
+        $options = new UserOptions();
+        $options->setUser($user);
+        $em->persist($options);
 
         $em->flush();
 

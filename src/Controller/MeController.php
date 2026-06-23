@@ -24,6 +24,15 @@ class MeController extends AbstractController
             'language'  => $user->getLanguage(),
             'roles'     => $user->getRoles(),
             'createdAt' => $user->getCreatedAt()?->format('Y-m-d H:i:s'),
+            'options'   => [
+                'keyboardLayout' => $user->getOptions()?->getKeyboardLayout() ?? 'azerty',
+                'volumeMaster'   => $user->getOptions()?->getVolumeMaster() ?? 80,
+                'volumeMusic'    => $user->getOptions()?->getVolumeMusic() ?? 70,
+                'volumeSfx'      => $user->getOptions()?->getVolumeSfx() ?? 100,
+                'fullscreen'     => $user->getOptions()?->isFullscreen() ?? false,
+                'showFps'        => $user->getOptions()?->isShowFps() ?? false,
+                'textSpeed'      => $user->getOptions()?->getTextSpeed() ?? 'normal',
+            ]
         ]);
     }
 }
