@@ -61,9 +61,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: GameSave::class, cascade: ['persist', 'remove'])]
     private Collection $gameSaves;
 
+    /**
+     * @var Collection<int, Character>
+     */
+    #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'user')]
+    private Collection $characters;
+
     public function __construct()
     {
         $this->gameSaves = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     // --- Getters / Setters ---
@@ -131,4 +138,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function getGameSaves(): Collection { return $this->gameSaves; }
+
+    /**
+     * @return Collection<int, Character>
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    public function addCharacter(Character $character): static
+    {
+        if (!$this->characters->contains($character)) {
+            $this->characters->add($character);
+            $character->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacter(Character $character): static
+    {
+        if ($this->characters->removeElement($character)) {
+            // set the owning side to null (unless already changed)
+            if ($character->getUser() === $this) {
+                $character->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }
