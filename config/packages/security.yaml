@@ -33,6 +33,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/news, roles: PUBLIC_ACCESS, methods: [GET] }      # lecture publique
+        - { path: ^/api/dialogue, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/admin, roles: ROLE_ADMIN }   
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
