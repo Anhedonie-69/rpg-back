@@ -19,6 +19,9 @@ class EnemyData
                 'lck'    => 2,
                 'xp'     => 10,
                 'gold'   => 5,
+                'loot'   => [
+                    ['id' => 'potion', 'chance' => 50, 'quantity' => 1],  // 50% de chance
+                ],
                 'skills' => ['attack'],
                 'color'  => 0x00ff00,
                 'size'   => 48,
@@ -36,6 +39,9 @@ class EnemyData
                 'lck'    => 4,
                 'xp'     => 20,
                 'gold'   => 10,
+                'loot'   => [
+                    ['id' => 'potion', 'chance' => 30, 'quantity' => 1],  // 30% de chance
+                ],
                 'skills' => ['attack'],
                 'color'  => 0xff6600,
                 'size'   => 56,

@@ -5,6 +5,7 @@ use App\Data\EnemyData;
 use App\Entity\Character;
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Data\ItemData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,38 @@ class BattleController extends AbstractController
         $zone    = $request->query->get('zone', 'default');
         $enemies = EnemyData::getGroupForZone($zone);
         return $this->json($enemies);
+    }
+
+    // POST /api/battle/loot → calcule le loot après victoire
+    #[Route('/api/battle/loot', name: 'api_battle_loot', methods: ['POST'])]
+    public function loot(Request $request): JsonResponse
+    {
+        $data    = json_decode($request->getContent(), true);
+        $enemies = $data['enemies']; // tableau des ennemis vaincus
+    
+        $totalXp   = 0;
+        $totalGold = 0;
+        $items     = [];
+    
+        foreach ($enemies as $enemy) {
+            $enemyData  = EnemyData::get($enemy['id']);
+            $totalXp   += $enemyData['xp'];
+            $totalGold += $enemyData['gold'];
+    
+            // Calcule le loot
+            foreach ($enemyData['loot'] ?? [] as $lootEntry) {
+                if (rand(1, 100) <= $lootEntry['chance']) {
+                    $item    = ItemData::get($lootEntry['id']);
+                    $items[] = array_merge($item, ['quantity' => $lootEntry['quantity']]);
+                }
+            }
+        }
+    
+        return $this->json([
+            'xp'    => $totalXp,
+            'gold'  => $totalGold,
+            'items' => $items,
+        ]);
     }
 
     // POST /api/battle/damage → calcule les dégâts
