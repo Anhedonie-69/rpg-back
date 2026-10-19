@@ -31,6 +31,7 @@ class GameSaveController extends AbstractController
                 'posY'      => $save->getPosY(),
                 'playTime'  => $save->getPlayTime(),
                 'gold'      => $save->getGold(),
+                'inventory' => $save->getInventory(),
                 'chapter'   => $save->getChapter(),
                 'flags'     => $save->getFlags(),
                 'partyIds'  => $save->getPartyIds(),
@@ -66,6 +67,7 @@ class GameSaveController extends AbstractController
         if (isset($data['posY']))     $save->setPosY((int) $data['posY']);
         if (isset($data['playTime'])) $save->setPlayTime((int) $data['playTime']);
         if (isset($data['gold']))     $save->setGold((int) $data['gold']);
+        if (isset($data['inventory'])) $save->setInventory($data['inventory']);
         if (isset($data['chapter']))  $save->setChapter((int) $data['chapter']);
         if (isset($data['flags']))    $save->setFlags($data['flags']);
         if (isset($data['partyIds'])) $save->setPartyIds($data['partyIds']);

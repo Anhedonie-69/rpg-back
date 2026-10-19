@@ -36,6 +36,9 @@ class GameSave
     #[ORM\Column]
     private int $gold = 0;
 
+    #[ORM\Column(type: 'json')]
+    private array $inventory = [];
+
     #[ORM\Column]
     private int $chapter = 1;
 
@@ -79,6 +82,9 @@ class GameSave
 
     public function getGold(): int { return $this->gold; }
     public function setGold(int $gold): static { $this->gold = $gold; return $this; }
+
+    public function getInventory(): array { return $this->inventory; }
+    public function setInventory(array $inventory): static { $this->inventory = $inventory; return $this; }
 
     public function getChapter(): int { return $this->chapter; }
     public function setChapter(int $chapter): static { $this->chapter = $chapter; return $this; }
