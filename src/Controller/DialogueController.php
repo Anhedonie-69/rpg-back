@@ -12,7 +12,11 @@ class DialogueController extends AbstractController
     public function get(string $id): JsonResponse
     {
         try {
-            $dialogue = DialogueData::get($id);
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $lang = $user->getLanguage() ?? 'fr';
+    
+            $dialogue = DialogueData::get($id, $lang);
             return $this->json($dialogue);
         } catch (\InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], 404);
