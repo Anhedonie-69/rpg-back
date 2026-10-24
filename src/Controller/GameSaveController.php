@@ -35,6 +35,7 @@ class GameSaveController extends AbstractController
                 'chapter'   => $save->getChapter(),
                 'flags'     => $save->getFlags(),
                 'partyIds'  => $save->getPartyIds(),
+                'createdAt' => $save->getCreatedAt()?->format('Y-m-d H:i:s'),
                 'updatedAt' => $save->getUpdatedAt()?->format('Y-m-d H:i:s'),
             ] : [
                 'slot'  => $slot,
